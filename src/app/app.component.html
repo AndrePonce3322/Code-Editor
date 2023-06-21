@@ -1,52 +1,89 @@
-<div class="w-full h-screen text-white overflow-auto flex flex-col">
+<div class="w-full h-screen text-white overflow-auto flex flex-col ">
+
+  <app-extensions [show]="showExtensions" (SelectedPackage)="SeletedPackage($event)"></app-extensions>
 
   <!-- Logo -->
-  <header class="w-full h-14 bg-gray-900 pl-6 flex items-center">
-    <h1 class="text-2xl font-bold tracking-wide">Code Editor ✍🏼</h1>
+  <header class="w-full h-14 bg-gray-900 px-6 flex items-center justify-between text-2xl">
+    <!-- Name -->
+    <h1 class="font-bold tracking-wide">Code Editor ✍🏼</h1>
+    <!-- Options -->
+    <section class="flex gap-2">
+      <i (click)="toggleExtensions()" matTooltip="Package"
+        class="ti ti-package bg-slate-600 rounded w-10 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-700"></i>
+
+      <i (click)="ThemeListFunction()" matTooltip="Themes"
+        class="ti ti-brush bg-slate-600 rounded w-10 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-700"></i>
+
+      <i
+        matTooltip="Controls"
+        class="ti ti-keyboard bg-slate-600 rounded w-10 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-700"></i>
+    </section>
   </header>
 
   <!-- Container -->
-  <main class="flex h-full">
+  <main class="grid">
 
     <!-- Codigo -->
-    <div class="w-[1050px] bg-slate-800 flex flex-col h-full overflow-auto">
-
+    <div class="w-full h-full flex flex-col">
       <!-- Navegacion -->
-      <nav>
+      <nav class="bg-slate-800">
         <ul class="flex">
-          <li class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white"
-            [ngClass]="{'border-white': state == 'html'}" (click)="setState('html')">HTML
+          <li
+            class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white flex gap-2 items-center justify-center opacity-50"
+            [ngClass]="{'active': state == 'html'}" (click)="setState('html')">
+            <i class="ti ti-brand-html5 text-orange-400"></i>
+            HTML
           </li>
-          <li class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white"
-            [ngClass]="{'border-white': state == 'css'}" (click)="setState('css')">CSS
+          <li
+            class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white flex gap-2 items-center justify-center opacity-50"
+            [ngClass]="{'active': state == 'css'}" (click)="setState('css')">
+            <i class="ti ti-brand-css3 text-blue-400"></i>
+            CSS
           </li>
-          <li class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white"
-            [ngClass]="{'border-white': state == 'js'}" (click)="setState('js')">
-            Javascript</li>
+          <li
+            class="p-2 w-full text-center cursor-pointer border-b-2 border-transparent hover:border-white flex gap-2 items-center justify-center opacity-50"
+            [ngClass]="{'active': state == 'js'}" (click)="setState('js')">
+            <i class="ti ti-brand-javascript text-yellow-400"></i>
+            JavaScript
+          </li>
         </ul>
       </nav>
 
       <!-- HTML, CSS, JavaScript -->
-      <div class="h-full">
-
+      <div class="w-full h-full">
         <!-- HTML -->
-        <div #HTML id="HTML" class="w-full h-full bg-teal-600" *ngIf="state == 'html'"></div>
+        <div #HTML class="w-full h-full relative" [ngClass]="{'block': state == 'html', 'hidden': state != 'html'}">
+          <!-- Copy Icon -->
+          <div class="absolute top-0 right-0 m-2">
+            <i (click)="CopyCode(InputValues.HTMLCode)" matTooltip="Copy Code"
+              class="ti ti-files bg-slate-600 rounded w-10 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-700 z-100 text-white"></i>
+          </div>
+          
+          <ngx-monaco-editor [options]="editorConstructor('html')" (init)="InitEditor($event)" #htmlEditor
+            [(ngModel)]="InputValues.HTMLCode"></ngx-monaco-editor>
+        </div>
 
         <!-- CSS -->
-        <div #CSS id="CSS" class="w-full h-full bg-pink-600" *ngIf="state == 'css'">
-
+        <div #CSS class="w-full h-full" [ngClass]="{'block': state == 'css', 'hidden': state != 'css'}">
+          <ngx-monaco-editor [options]="editorConstructor('css')" (init)="InitEditor($event)"
+            [(ngModel)]="InputValues.CSSCode"></ngx-monaco-editor>
         </div>
-
         <!-- JavaScript -->
-        <div #JS id="JS1" class="w-full h-full bg-yellow-600" *ngIf="state == 'js'">
-
+        <div #JS class="w-full h-full" [ngClass]="{'block': state == 'js', 'hidden': state != 'js'}">
+          <ngx-monaco-editor [options]="editorConstructor('javascript')" (init)="InitEditor($event)"
+            [(ngModel)]="InputValues.JSCode"></ngx-monaco-editor>
         </div>
-
       </div>
+
     </div>
 
-    <div class="w-full h-full text-black">
-      <iframe class="w-full h-full" srcdoc="<h1>Hola mundo desde mi iframe como están</h1>"></iframe>
+    <div class="gutter-col gutter-col-1"></div>
+
+    <!-- Iframe Video -->
+    <div class="w-full h-full text-black relative">
+      <app-themes [showThemeList]="ShowThemeList" [ThemeList]="VisualStudioThemes"
+        (ThemeSelected)="ThemeSelected($event)"></app-themes>
+      <iframe class="w-full h-full" #iframe></iframe>
     </div>
 
   </main>
