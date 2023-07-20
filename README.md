@@ -1,8 +1,8 @@
 <h2>
-  CodeEditor  
+  Code Editor  
 </h2>
 <p>
-  This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.4.
+  This project was generated with Angular version 16.0.4.
 </p>
 
 <h2>
